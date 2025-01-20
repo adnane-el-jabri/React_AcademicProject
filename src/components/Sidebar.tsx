@@ -12,8 +12,19 @@ export const Sidebar: React.FC = () => {
         </li>
         <li className="p-2 hover:bg-gray-700">
           <Link to="/parcours" className="block">
-            Parcours
+          Gestion des Parcours
           </Link>
+        </li>
+        <li className="p-2 hover:bg-gray-700">
+          <Link to="/ues" className="block">
+            Gestion des UEs
+          </Link>
+        </li>
+        <li className="p-2 hover:bg-gray-700">
+          <Link to="/etudiants" className="block">
+            Gestion des Etudiants
+          </Link>
+          
         </li>
       </ul>
     </div>
