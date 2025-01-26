@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
-import { Modal, Input } from "../../../components";
+import { Modal, ModalTitle, ModalDescription, ModalFooter } from "../../../components/modalV2";
+import { Input } from "../../../components";
 import { Button } from "../../../components"; 
 
 type Props = {
@@ -49,9 +50,11 @@ export const EtudiantModalForm: React.FC<Props> = ({ isOpen, onClose, onSubmit, 
         onClose();
       }}
     >
-      <h2 className="text-xl font-bold mb-4">
+      <ModalTitle>
         {initialValue ? "Modifier un étudiant" : "Ajouter un étudiant"}
-      </h2>
+      </ModalTitle>
+      <ModalDescription>Veuillez remplir les champs ci-dessous :</ModalDescription>
+      
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -81,13 +84,13 @@ export const EtudiantModalForm: React.FC<Props> = ({ isOpen, onClose, onSubmit, 
           onChange={(e) => setForm((prevForm) => ({ ...prevForm, email: e.target.value }))}
           errorMessage={errors.email}
         />
-        <div className="flex justify-end mt-4">
-          <Button type="submit" className="bg-blue-500 p-2 rounded-lg text-white">
+        
+        <ModalFooter>
+          <Button type="submit" className="bg-blue-500 px-4 py-2 rounded text-white">
             Enregistrer
           </Button>
-        </div>
+        </ModalFooter>
       </form>
     </Modal>
-);
-
+  );
 };
