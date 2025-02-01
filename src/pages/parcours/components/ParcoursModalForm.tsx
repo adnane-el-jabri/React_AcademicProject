@@ -30,7 +30,7 @@ export const ParcoursModalForm: React.FC<Props> = ({
   const [form, setForm] = useState<PartialParcours>({ anneeFormation: 1, nomParcours: "" });
   const [errors, setErrors] = useState<{ nomParcours?: string; anneeFormation?: string }>({});
 
-  // ✅ Réinitialiser le formulaire lorsqu'on ouvre la modal
+  // Réinitialiser le formulaire lorsqu'on ouvre la modal
   useEffect(() => {
     if (isOpen) {
       if (initialValue) {
@@ -42,7 +42,7 @@ export const ParcoursModalForm: React.FC<Props> = ({
     }
   }, [isOpen, initialValue]);
 
-  // ✅ Validation avant soumission
+  // Validation avant soumission
   const validateForm = () => {
     const result = schema.safeParse(form);
     if (!result.success) {
@@ -63,7 +63,7 @@ export const ParcoursModalForm: React.FC<Props> = ({
     <Modal
       isOpen={isOpen}
       onClose={() => {
-        setForm({ anneeFormation: 1, nomParcours: "" }); // ✅ Réinitialiser à la fermeture
+        setForm({ anneeFormation: 1, nomParcours: "" }); // Réinitialiser à la fermeture
         setErrors({});
         onClose();
       }}

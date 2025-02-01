@@ -9,18 +9,18 @@ export type Etudiant = {
 
 const LOCAL_STORAGE_KEY_ETUDIANT = "etudiantsData";
 
-// ✅ Fonction pour récupérer les étudiants depuis le LocalStorage
+// Fonction pour récupérer les étudiants depuis le LocalStorage
 const getEtudiantsFromLocalStorage = (): Etudiant[] => {
   const data = localStorage.getItem(LOCAL_STORAGE_KEY_ETUDIANT);
   return data ? JSON.parse(data) : [];
 };
 
-// ✅ Fonction pour sauvegarder les étudiants dans le LocalStorage
+// Fonction pour sauvegarder les étudiants dans le LocalStorage
 const setEtudiantsToLocalStorage = (etudiants: Etudiant[]) => {
   localStorage.setItem(LOCAL_STORAGE_KEY_ETUDIANT, JSON.stringify(etudiants));
 };
 
-// ✅ Initialisation des données si le LocalStorage est vide
+// Initialisation des données si le LocalStorage est vide
 if (!localStorage.getItem(LOCAL_STORAGE_KEY_ETUDIANT)) {
   setEtudiantsToLocalStorage([
     { id: "1", nom: "Dupont", prenom: "Jean", email: "jean.dupont@example.com" },
@@ -28,7 +28,7 @@ if (!localStorage.getItem(LOCAL_STORAGE_KEY_ETUDIANT)) {
   ]);
 }
 
-// ✅ Hook pour récupérer la liste des étudiants
+// Hook pour récupérer la liste des étudiants
 export const useListEtudiants = () => {
   const fetchEtudiants = async (): Promise<Etudiant[]> => {
     return getEtudiantsFromLocalStorage();
@@ -40,7 +40,7 @@ export const useListEtudiants = () => {
   });
 };
 
-// ✅ Hook pour créer un étudiant
+// Hook pour créer un étudiant
 export const useCreateEtudiant = () => {
   type Input = { nom: string; prenom: string; email: string };
   const queryClient = useQueryClient();
@@ -55,7 +55,7 @@ export const useCreateEtudiant = () => {
   return useMutation<Etudiant, Error, Input>({
     mutationFn: createEtudiant,
     onMutate: async (newEtudiant) => {
-        await queryClient.cancelQueries({ queryKey: ["etudiants"] }); // ✅ Nouvelle syntaxe
+        await queryClient.cancelQueries({ queryKey: ["etudiants"] }); // Nouvelle syntaxe
         queryClient.setQueryData<Etudiant[]>(["etudiants"], (old) => [
         ...(old || []),
         { id: Date.now().toString(), ...newEtudiant },
@@ -64,7 +64,7 @@ export const useCreateEtudiant = () => {
   });
 };
 
-// ✅ Hook pour mettre à jour un étudiant
+// Hook pour mettre à jour un étudiant
 export const useUpdateEtudiant = () => {
   type Input = { id: string; nom?: string; prenom?: string; email?: string };
   const queryClient = useQueryClient();
@@ -92,7 +92,7 @@ export const useUpdateEtudiant = () => {
   });
 };
 
-// ✅ Hook pour supprimer un étudiant
+// Hook pour supprimer un étudiant
 export const useDeleteEtudiant = () => {
   type Input = { id: string };
   const queryClient = useQueryClient();

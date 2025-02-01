@@ -9,7 +9,7 @@ type InputSelectProps = {
   id: string;
   label: string;
   options: Option[];
-  errorMessage?: string; // ✅ Ajout d'une prop pour la gestion des erreurs
+  errorMessage?: string; // Ajout d'une prop pour la gestion des erreurs
   onChange: (e: string) => void;
 } & Omit<React.HTMLProps<HTMLSelectElement>, "onChange">;
 
@@ -17,7 +17,7 @@ export const InputSelect: React.FC<InputSelectProps> = ({
   id,
   label,
   options,
-  errorMessage, // ✅ Ajout de la gestion des erreurs
+  errorMessage, // Ajout de la gestion des erreurs
   value,
   onChange,
 }) => {

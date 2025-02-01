@@ -3,13 +3,13 @@ import React from "react";
 type InputProps = {
   id: string;
   label: string;
-  errorMessage?: string; // ✅ Ajout d'une prop pour afficher les erreurs
+  errorMessage?: string; // Ajout d'une prop pour afficher les erreurs
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export const Input: React.FC<InputProps> = ({
   id,
   label,
-  errorMessage, // ✅ Ajout de la gestion des erreurs
+  errorMessage, // Ajout de la gestion des erreurs
   type = "text",
   placeholder,
   value,

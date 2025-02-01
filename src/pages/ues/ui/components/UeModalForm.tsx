@@ -13,7 +13,7 @@ type Props = {
   initialValue?: { nomUe: string; codeUe: string };
 };
 
-// ✅ Définition du schéma de validation avec Zod
+// Définition du schéma de validation avec Zod
 const schema = z.object({
   nomUe: z.string().min(1, { message: "Le nom de l'UE est requis" }),
   codeUe: z.string().min(1, { message: "Le code de l'UE est requis" }),
@@ -31,12 +31,12 @@ export const UeModalForm: React.FC<Props> = ({ isOpen, onClose, onSubmit, initia
     } else {
       setForm({ nomUe: "", codeUe: "" });
     }
-    setErrors({}); // ✅ Réinitialisation des erreurs à l'ouverture
+    setErrors({}); // Réinitialisation des erreurs à l'ouverture
   }, [initialValue, isOpen]);
 
   if (!isOpen) return null;
 
-  // ✅ Validation avant soumission
+  // Validation avant soumission
   const validateForm = () => {
     const result = schema.safeParse(form);
     if (!result.success) {
@@ -57,7 +57,7 @@ export const UeModalForm: React.FC<Props> = ({ isOpen, onClose, onSubmit, initia
     <Modal
       isOpen={isOpen}
       onClose={() => {
-        setForm({ nomUe: "", codeUe: "" }); // ✅ Réinitialisation des champs à la fermeture
+        setForm({ nomUe: "", codeUe: "" }); // Réinitialisation des champs à la fermeture
         setErrors({});
         onClose();
       }}

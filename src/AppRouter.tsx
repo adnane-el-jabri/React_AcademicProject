@@ -19,11 +19,24 @@ const router = createBrowserRouter([
         element: <ParcoursPage />,
       },
       {
+        path: "/parcours/create",
+        element: <ParcoursPage createMode={true} />,  // ✅ Ajout de la route pour créer un parcours
+      },
+      {
         path: "/ues",
         element: <UesPage />,
       },
+      {
+        path: "/ues/create",    // ✅ Ajout de la route pour créer une UE
+        element: <UesPage createMode={true} />,  // Passer une prop pour ouvrir la modal directement
+      },
       { path: "/etudiants", 
-        element: <EtudiantsPage /> },
+        element: <EtudiantsPage /> 
+      },
+      {
+        path: "/etudiants/create",
+        element: <EtudiantsPage createMode={true} />,  // ✅ Ajout de la route pour créer un étudiant
+      },
     ],
   },
 ])

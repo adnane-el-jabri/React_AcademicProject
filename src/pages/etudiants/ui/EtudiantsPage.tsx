@@ -1,8 +1,8 @@
 import { Edit, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table } from "../../../components/Table";
 import { Button } from "../../../components"; 
-
+import { useLocation, useNavigate } from "react-router-dom"; 
 
 import {
   type Etudiant,
@@ -13,7 +13,12 @@ import {
 } from "../hooks/useEtudiantsProvider";
 import { EtudiantModalForm } from "../components/EtudiantModalForm";
 
-export const EtudiantsPage: React.FC = () => {
+// ✅ Définir le type de la prop createMode
+interface EtudiantsPageProps {
+  createMode?: boolean;
+}
+
+export const EtudiantsPage: React.FC<EtudiantsPageProps> = ({ createMode }) => {
   const [modalOpen, setModalOpen] = useState<{
     create?: boolean;
     edit?: boolean;
@@ -29,16 +34,25 @@ export const EtudiantsPage: React.FC = () => {
 
   const { data } = useListEtudiants();
 
-  // ✅ Ajouter un étudiant
+  const location = useLocation();  
+  const navigate = useNavigate();  
+
+  // ✅ Ouvrir automatiquement la modal si createMode est vrai ou si l'URL est /etudiants/create
+  useEffect(() => {
+    if (location.pathname === "/etudiants/create" || createMode) {
+      setModalOpen({ create: true });
+    }
+  }, [location, createMode]);
+
   const handleCreate = (etudiant: Omit<Etudiant, "id">) => {
     createEtudiant(etudiant, {
       onSuccess: () => {
         setModalOpen({});
+        navigate("/etudiants");  // ✅ Retour à la liste après création
       },
     });
   };
 
-  // ✅ Modifier un étudiant
   const handleUpdate = (id: string, etudiant: Omit<Etudiant, "id">) => {
     updateEtudiant(
       { id, ...etudiant },
@@ -50,7 +64,6 @@ export const EtudiantsPage: React.FC = () => {
     );
   };
 
-  // ✅ Déterminer si c'est un ajout ou une modification
   const handleSubmit = (etudiant: Omit<Etudiant, "id">) => {
     if (modalOpen.create) {
       handleCreate(etudiant);
@@ -59,7 +72,6 @@ export const EtudiantsPage: React.FC = () => {
     }
   };
 
-  // ✅ Supprimer un étudiant avec confirmation
   const handleDelete = (id: string) => {
     if (confirm("Voulez-vous vraiment supprimer cet étudiant ?")) {
       deleteEtudiant({ id });
@@ -69,7 +81,6 @@ export const EtudiantsPage: React.FC = () => {
   return (
     <>
       <div className="space-y-4">
-        {/* ✅ Bouton d'ajout */}
         <div className="flex justify-end">
           <Button
             onClick={() => setModalOpen({ create: true })}
@@ -79,7 +90,6 @@ export const EtudiantsPage: React.FC = () => {
           </Button>
         </div>
 
-        {/* ✅ Tableau des étudiants */}
         <Table
           data={data}
           columns={[
@@ -110,10 +120,14 @@ export const EtudiantsPage: React.FC = () => {
         />
       </div>
 
-      {/* ✅ Modal d'ajout/modification */}
       <EtudiantModalForm
         isOpen={modalOpen.edit ?? modalOpen.create ?? false}
-        onClose={() => setModalOpen({})}
+        onClose={() => {
+          setModalOpen({});
+          if (location.pathname === "/etudiants/create") {
+            navigate("/etudiants");  // ✅ Retour à la liste si modal fermée depuis /etudiants/create
+          }
+        }}
         onSubmit={handleSubmit}
         initialValue={modalOpen.etudiant}
       />

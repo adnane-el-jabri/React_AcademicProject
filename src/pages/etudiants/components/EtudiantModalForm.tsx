@@ -11,7 +11,7 @@ type Props = {
   initialValue?: { nom: string; prenom: string; email: string };
 };
 
-// ✅ Définition du schéma de validation avec Zod
+// Définition du schéma de validation avec Zod
 const schema = z.object({
   nom: z.string().min(1, { message: "Le nom est requis" }),
   prenom: z.string().min(1, { message: "Le prénom est requis" }),
