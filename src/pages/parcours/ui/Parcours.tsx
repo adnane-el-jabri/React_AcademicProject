@@ -1,48 +1,41 @@
+// ParcoursPage.tsx
 import { Edit, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Table } from "../../../components/Table";
-import { Button } from "../../../components"; 
-import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "../../../components";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import {
   type Parcours,
   useCreateParcours,
   useListParcours,
   useUpdateParcours,
-  useDeleteParcours
+  useDeleteParcours,
 } from "../hooks/useParcoursProvider";
 import { ParcoursModalForm, PartialParcours } from "../components/ParcoursModalForm";
 
-// ✅ Définir le type de la prop createMode
-interface ParcoursPageProps {
-  createMode?: boolean;
-}
-
-export const ParcoursPage: React.FC<ParcoursPageProps> = ({ createMode }) => {
-  const [modalOpen, setModalOpen] = useState<{
-    create?: boolean;
-    edit?: boolean;
-    parcours?: Parcours;
-  }>({
-    create: false,
-    edit: false,
-  });
-
+export const ParcoursPage: React.FC = () => {
+  const [modalOpen, setModalOpen] = useState<{ create?: boolean; edit?: boolean; parcours?: Parcours }>({});
   const { mutate: createParcours } = useCreateParcours();
   const { mutate: updateParcours } = useUpdateParcours();
   const { mutate: deleteParcours } = useDeleteParcours();
+  const { data: parcoursList } = useListParcours();
 
-  const { data } = useListParcours();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { id } = useParams();  // Récupération de l'ID depuis l'URL
 
-  const location = useLocation();  
-  const navigate = useNavigate();  
-
-  // ✅ Ouvrir automatiquement la modal si createMode est vrai ou si l'URL est /parcours/create
+  // Ouvrir automatiquement la modal pour la création ou l'édition en fonction de l'URL
   useEffect(() => {
-    if (location.pathname === "/parcours/create" || createMode) {
+    if (location.pathname === "/parcours/create") {
       setModalOpen({ create: true });
+    } else if (id && location.pathname.startsWith("/parcours/edit")) {
+      const parcoursToEdit = parcoursList?.find((p) => p.id === id);
+      if (parcoursToEdit) {
+        setModalOpen({ edit: true, parcours: parcoursToEdit });
+      }
     }
-  }, [location, createMode]);
+  }, [location, id, parcoursList]);
 
   const handleCreate = (parcours: PartialParcours) => {
     createParcours(
@@ -53,7 +46,7 @@ export const ParcoursPage: React.FC<ParcoursPageProps> = ({ createMode }) => {
       {
         onSuccess: () => {
           setModalOpen({});
-          navigate("/parcours");  // ✅ Retour à la liste après création
+          navigate("/parcours");  // Redirection après la création
         },
       }
     );
@@ -69,6 +62,7 @@ export const ParcoursPage: React.FC<ParcoursPageProps> = ({ createMode }) => {
       {
         onSuccess: () => {
           setModalOpen({});
+          navigate("/parcours");  // Redirection après la modification
         },
       }
     );
@@ -101,7 +95,7 @@ export const ParcoursPage: React.FC<ParcoursPageProps> = ({ createMode }) => {
         </div>
 
         <Table
-          data={data}
+          data={parcoursList}
           columns={[
             { key: "nomParcours", label: "Nom" },
             { key: "anneeFormation", label: "Année" },
@@ -134,9 +128,7 @@ export const ParcoursPage: React.FC<ParcoursPageProps> = ({ createMode }) => {
         isOpen={modalOpen.edit ?? modalOpen.create ?? false}
         onClose={() => {
           setModalOpen({});
-          if (location.pathname === "/parcours/create") {
-            navigate("/parcours");  // ✅ Retour à la liste si modal fermée depuis /parcours/create
-          }
+          navigate("/parcours");  // Redirection après fermeture de la modal
         }}
         onSubmit={handleSubmit}
         initialValue={modalOpen.parcours}
